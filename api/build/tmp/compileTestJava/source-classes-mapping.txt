@@ -1,2 +1,0 @@
-com/ggrec/vister/VisterApplicationTests.java
- com.ggrec.vister.VisterApplicationTests
