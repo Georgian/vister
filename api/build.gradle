@@ -1,0 +1,40 @@
+plugins {
+	id 'org.springframework.boot' version '2.3.4.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+	id 'java'
+}
+
+group = 'com.ggrec'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+	jcenter()
+	mavenCentral()
+}
+
+dependencies {
+	compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
+	annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
+	implementation 'com.google.guava:guava:29.0-jre'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-amqp'
+	implementation 'com.graphql-java-kickstart:graphql-spring-boot-starter:7.0.1'
+	implementation 'com.graphql-java:graphql-java-extended-scalars:1.0.1'
+	runtimeOnly 'com.graphql-java-kickstart:altair-spring-boot-starter:7.0.1' // to embed Altair tool
+	runtimeOnly 'com.graphql-java-kickstart:graphiql-spring-boot-starter:7.0.1' // to embed GraphiQL tool
+	runtimeOnly 'com.graphql-java-kickstart:voyager-spring-boot-starter:7.0.1' // to embed Voyager tool
+	implementation 'org.flywaydb:flyway-core:6.5.7'
+	implementation 'com.h2database:h2:1.4.200'
+	implementation 'mysql:mysql-connector-java:8.0.21'
+	testImplementation 'com.graphql-java-kickstart:graphql-spring-boot-starter-test:7.0.1'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+}
+
+test {
+	useJUnitPlatform()
+}
