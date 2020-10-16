@@ -1,0 +1,10 @@
+
+### DB ### 
+db/
+
+### React ###
+.DS_*
+web/logs
+web/**/*.backup.*
+web/**/*.back.*
+web/node_modules
