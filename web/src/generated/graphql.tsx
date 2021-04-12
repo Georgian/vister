@@ -9,15 +9,19 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** Built-in java.math.BigDecimal */
+  BigDecimal: any;
   Date: any;
   Upload: any;
 };
+
 
 
 export type Mutation = {
   __typename?: 'Mutation';
   uploadStatement?: Maybe<Scalars['String']>;
   updateTransaction?: Maybe<Transaction>;
+  updateTransactions?: Maybe<Array<Maybe<Transaction>>>;
 };
 
 
@@ -31,14 +35,36 @@ export type MutationUpdateTransactionArgs = {
   date: Scalars['Date'];
 };
 
+
+export type MutationUpdateTransactionsArgs = {
+  objects: Array<TransactionEditInput>;
+};
+
+export type PortfolioSummary = {
+  __typename?: 'PortfolioSummary';
+  totalRON?: Maybe<Scalars['BigDecimal']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   transactions?: Maybe<Array<Maybe<Transaction>>>;
+  portfolioSummary?: Maybe<PortfolioSummary>;
 };
 
 export type Transaction = {
   __typename?: 'Transaction';
-  id: Scalars['ID'];
+  id?: Maybe<Scalars['ID']>;
+  date?: Maybe<Scalars['Date']>;
+  reference?: Maybe<Scalars['String']>;
+  category?: Maybe<Scalars['String']>;
+  amount?: Maybe<Scalars['Float']>;
+  currency?: Maybe<Scalars['String']>;
+  account?: Maybe<Scalars['String']>;
+  comment?: Maybe<Scalars['String']>;
+};
+
+export type TransactionEditInput = {
+  id?: Maybe<Scalars['ID']>;
   date?: Maybe<Scalars['Date']>;
   reference?: Maybe<Scalars['String']>;
   category?: Maybe<Scalars['String']>;
@@ -72,6 +98,19 @@ export type UpdateTransactionMutation = (
     { __typename?: 'Transaction' }
     & Pick<Transaction, 'id' | 'date' | 'reference' | 'category' | 'amount' | 'currency' | 'account' | 'comment'>
   )> }
+);
+
+export type UpdateTransactionsMutationVariables = Exact<{
+  objects: Array<TransactionEditInput>;
+}>;
+
+
+export type UpdateTransactionsMutation = (
+  { __typename?: 'Mutation' }
+  & { updateTransactions?: Maybe<Array<Maybe<(
+    { __typename?: 'Transaction' }
+    & Pick<Transaction, 'id' | 'date' | 'reference' | 'category' | 'amount' | 'currency' | 'account' | 'comment'>
+  )>>> }
 );
 
 
@@ -154,3 +193,42 @@ export function useUpdateTransactionMutation(baseOptions?: Apollo.MutationHookOp
 export type UpdateTransactionMutationHookResult = ReturnType<typeof useUpdateTransactionMutation>;
 export type UpdateTransactionMutationResult = Apollo.MutationResult<UpdateTransactionMutation>;
 export type UpdateTransactionMutationOptions = Apollo.BaseMutationOptions<UpdateTransactionMutation, UpdateTransactionMutationVariables>;
+export const UpdateTransactionsDocument = gql`
+    mutation updateTransactions($objects: [TransactionEditInput!]!) {
+  updateTransactions(objects: $objects) {
+    id
+    date
+    reference
+    category
+    amount
+    currency
+    account
+    comment
+  }
+}
+    `;
+export type UpdateTransactionsMutationFn = Apollo.MutationFunction<UpdateTransactionsMutation, UpdateTransactionsMutationVariables>;
+
+/**
+ * __useUpdateTransactionsMutation__
+ *
+ * To run a mutation, you first call `useUpdateTransactionsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTransactionsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTransactionsMutation, { data, loading, error }] = useUpdateTransactionsMutation({
+ *   variables: {
+ *      objects: // value for 'objects'
+ *   },
+ * });
+ */
+export function useUpdateTransactionsMutation(baseOptions?: Apollo.MutationHookOptions<UpdateTransactionsMutation, UpdateTransactionsMutationVariables>) {
+        return Apollo.useMutation<UpdateTransactionsMutation, UpdateTransactionsMutationVariables>(UpdateTransactionsDocument, baseOptions);
+      }
+export type UpdateTransactionsMutationHookResult = ReturnType<typeof useUpdateTransactionsMutation>;
+export type UpdateTransactionsMutationResult = Apollo.MutationResult<UpdateTransactionsMutation>;
+export type UpdateTransactionsMutationOptions = Apollo.BaseMutationOptions<UpdateTransactionsMutation, UpdateTransactionsMutationVariables>;

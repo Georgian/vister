@@ -2,13 +2,14 @@ package com.ggrec.vister.entity;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import org.hibernate.annotations.Generated;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDate;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 @Data
 @Accessors(fluent = true)
@@ -25,5 +26,10 @@ public class TransactionEntity {
     private String currency;
     private String account;
     private String comment;
+
+    public boolean shouldBeDeleted() {
+        return Stream.of(date, reference, category, amount, currency, account, comment)
+                .allMatch(Objects::isNull);
+    }
 
 }

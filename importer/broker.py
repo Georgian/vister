@@ -1,6 +1,7 @@
 import functools
 import json
 import logging
+
 import pika
 
 LOGGER = logging.getLogger(__name__)

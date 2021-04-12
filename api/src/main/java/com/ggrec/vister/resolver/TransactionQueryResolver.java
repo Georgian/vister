@@ -28,6 +28,7 @@ public class TransactionQueryResolver implements GraphQLQueryResolver {
                 .id(transactionEntity.id())
                 .date(transactionEntity.date())
                 .reference(transactionEntity.reference())
+                .category(transactionEntity.category())
                 .amount(transactionEntity.amount())
                 .currency(transactionEntity.currency())
                 .account(transactionEntity.account())

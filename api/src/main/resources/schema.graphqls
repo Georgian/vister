@@ -1,18 +1,32 @@
 scalar Date
 scalar Float
 scalar Upload
+scalar BigDecimal
 
 type Mutation {
     uploadStatement(file: Upload!): String
     updateTransaction(id: ID!, date: Date!): Transaction
+    updateTransactions(objects: [TransactionEditInput!]!): [Transaction]
 }
 
 type Query {
-    transactions: [Transaction]
+    transactions: [Transaction],
+    portfolioSummary: PortfolioSummary
+}
+
+input TransactionEditInput {
+    id: ID
+    date: Date
+    reference: String
+    category: String
+    amount: Float
+    currency: String
+    account: String
+    comment: String
 }
 
 type Transaction {
-     id: ID !
+     id: ID
      date: Date
      reference: String
      category: String
@@ -20,4 +34,8 @@ type Transaction {
      currency: String
      account: String
      comment: String
+}
+
+type PortfolioSummary {
+    totalRON: BigDecimal
 }

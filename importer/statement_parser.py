@@ -1,5 +1,8 @@
-import xlrd
 from datetime import datetime
+import pandas as pd
+
+import xlrd
+
 import util
 from model import Transaction, Categories
 
@@ -9,9 +12,10 @@ CSV_FILE_TYPES = ["csv"]
 
 class StatementParser(object):
 
-    def __init__(self, headers, body):
+    def __init__(self, headers, body, mysql_conn):
         self.headers = headers
         self.body = body
+        self.mysql_conn = mysql_conn
 
     def parse(self):
         file_type = self.headers['ContentType']
@@ -28,6 +32,9 @@ class StatementParser(object):
     def parse_xls_raiffeisen(self, wb):
         sheet = wb.sheet_by_index(0)
         transactions = []
+        currency = sheet.row_values(11)[5]  # TODO
+        if currency == 'LEI':
+            currency = 'RON'
 
         for row_nbr in range(sheet.nrows):
             values = sheet.row_values(row_nbr)
@@ -50,9 +57,11 @@ class StatementParser(object):
             transaction.reference = util.clear_spaces(reference)
             transaction.debit = values[2]
             transaction.credit = values[3]
-            transaction.currency = 'RON' # TODO
+            transaction.currency = currency
             transaction.source = 'Raiffeisen'
             transaction.category = self.guess_category(reference)
+
+            print(transaction.category)
 
             transactions.append(transaction)
 
@@ -67,21 +76,10 @@ class StatementParser(object):
     def format_date(date_obj):
         return date_obj.strftime('%-d %b %Y')
 
-    # TODO Implement Naive Bayes
-    @staticmethod
-    def guess_category(ref):
-        if ref.startswith('ATM') or ref.startswith('Revolut*3622*'):
-            return Categories.SELF_TRANSFER
-        elif ref.startswith('3PILLAR'):
-            return Categories.SALARY
-        elif ref.startswith('Pago'):
-            return Categories.HOUSE
-        elif ref.startswith('ITUNES') or ref.startswith('HBOEUROPESRO'):
-            return Categories.SUBSCRIPTIONS
-        elif ref.startswith('OMW'):
-            return Categories.CAR
-        elif ref.startswith('MAGAZIN BICICLETE DEP CLUJ-NAPOCA'):
-            return Categories.BIKE
+    def guess_category(self, reference):
+        df = pd.read_sql("SELECT * FROM mappings", self.mysql_conn)
+        values = df.loc[df['text'] == reference]['category'].values
+        return values[1] if values else ''
 
     def parse_csv(self):
         return []

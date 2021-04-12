@@ -5,7 +5,6 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import 'handsontable/dist/handsontable.full.css';
-import "tabler-react/dist/Tabler.css";
 import { ApolloClient, ApolloLink, ApolloProvider, InMemoryCache } from '@apollo/client';
 import { ApolloProvider as ApolloHooksProvider } from '@apollo/client';
 
