@@ -95,7 +95,6 @@ const onValueChanged = (changes: CellChange[] | null, source: ChangeSource, muta
     }
   });
 
-  if (editedRows)
     mutation({ variables: { objects: editedRows }});
 }
 
